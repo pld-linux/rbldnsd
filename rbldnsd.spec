@@ -6,13 +6,13 @@
 Summary:	Small fast daemon to serve DNSBLs
 Summary(pl):	Ma³y, szybki demon obs³uguj±cy zapytania DNSBL
 Name:		rbldnsd
-Version:	0.991
+Version:	0.993.1
 Release:	0.1
 License:	GPL v2+
 Group:		Networking/Daemons
 Vendor:		Michael Tokarev <mjt@corpit.ru>
 Source0:	http://www.corpit.ru/mjt/rbldnsd/%{name}_%{version}.tar.gz
-# Source0-md5:	f7c3642a92014e8a5712386fb32a2ab0
+# Source0-md5:	437d6877cfb2d086a12827cc2b430630
 URL:		http://www.corpit.ru/mjt/rbldnsd.html
 BuildRequires:	rpmbuild(macros) >= 1.159
 Requires(pre):	/bin/id
@@ -92,7 +92,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc NEWS TODO debian/changelog CHANGES-0.81
+%doc NEWS TODO debian/changelog CHANGES-0.81 README.user
 %attr(755,root,root) %{_sbindir}/rbldnsd
 %attr(754,root,root) /etc/rc.d/init.d/rbldnsd
 %config(noreplace) %verify(not md5 size mtime) /etc/rbldnsd
