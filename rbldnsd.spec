@@ -56,8 +56,6 @@ install debian/rbldnsd.init $RPM_BUILD_ROOT/etc/rc.d/init.d/rbldnsd
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post
-
 %pre
 if [ -n "`/bin/id -u rbldnsd 2>/dev/null`" ]; then
 :
