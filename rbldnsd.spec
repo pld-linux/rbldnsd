@@ -14,10 +14,12 @@ Vendor:		Michael Tokarev <mjt@corpit.ru>
 Source0:	http://www.corpit.ru/mjt/rbldnsd/%{name}_%{version}.tar.gz
 # Source0-md5:	f7c3642a92014e8a5712386fb32a2ab0
 URL:		http://www.corpit.ru/mjt/rbldnsd.html
+BuildRequires:	rpmbuild(macros) >= 1.159
 Requires(pre):	/bin/id
 Requires(pre):	/usr/sbin/useradd
 Requires(post,preun):	/sbin/chkconfig
 Requires(postun):	/usr/sbin/userdel
+Provides:	user(rbldns)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define 	_homedir	/var/lib/rbldns
@@ -85,7 +87,7 @@ fi
 
 %postun
 if [ "$1" = "0" ]; then
-	/usr/sbin/userdel rbldns || :
+	%userremove rbldns
 fi
 
 %files
