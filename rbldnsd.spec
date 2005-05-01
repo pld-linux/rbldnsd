@@ -14,7 +14,7 @@ Vendor:		Michael Tokarev <mjt@corpit.ru>
 Source0:	http://www.corpit.ru/mjt/rbldnsd/%{name}_%{version}.tar.gz
 # Source0-md5:	fb27cb79de6de909568c69477bab4383
 URL:		http://www.corpit.ru/mjt/rbldnsd.html
-BuildRequires:	rpmbuild(macros) >= 1.159
+BuildRequires:	rpmbuild(macros) >= 1.202
 Requires(pre):	/bin/id
 Requires(pre):	/usr/sbin/useradd
 Requires(post,preun):	/sbin/chkconfig
@@ -59,15 +59,7 @@ install debian/rbldnsd.init $RPM_BUILD_ROOT/etc/rc.d/init.d/rbldnsd
 rm -rf $RPM_BUILD_ROOT
 
 %pre
-if [ -n "`/bin/id -u rbldnsd 2>/dev/null`" ]; then
-:
-#	if [ "`/bin/id -u rbldnsd`" != "XXX" ]; then
-#		echo "Error: user rbldnsd doesn't have uid=62. Correct this before installing rbldnsd." 1>&2
-#		exit 1
-#	fi
-else
-	/usr/sbin/useradd  -r -d %{_homedir} -M -c "rbldnsd pseudo-user" -s /bin/false rbldns
-fi
+%useradd  -r -d %{_homedir} -M -c "rbldnsd pseudo-user" -s /bin/false rbldns
 
 %post
 /sbin/chkconfig --add rbldnsd
