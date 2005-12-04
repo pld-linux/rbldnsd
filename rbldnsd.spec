@@ -15,10 +15,10 @@ Source0:	http://www.corpit.ru/mjt/rbldnsd/%{name}_%{version}.tar.gz
 # Source0-md5:	888a61e9a296a1b76db0c94ca44c612a
 URL:		http://www.corpit.ru/mjt/rbldnsd.html
 BuildRequires:	rpmbuild(macros) >= 1.202
-Requires(pre):	/bin/id
-Requires(pre):	/usr/sbin/useradd
 Requires(post,preun):	/sbin/chkconfig
 Requires(postun):	/usr/sbin/userdel
+Requires(pre):	/bin/id
+Requires(pre):	/usr/sbin/useradd
 Provides:	user(rbldns)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -52,7 +52,7 @@ install -d $RPM_BUILD_ROOT%{_homedir}
 
 install rbldnsd $RPM_BUILD_ROOT%{_sbindir}
 install rbldnsd.8 $RPM_BUILD_ROOT%{_mandir}/man8
-install debian/rbldnsd.default $RPM_BUILD_ROOT/etc/rbldnsd
+install debian/rbldnsd.default $RPM_BUILD_ROOT%{_sysconfdir}/rbldnsd
 install debian/rbldnsd.init $RPM_BUILD_ROOT/etc/rc.d/init.d/rbldnsd
 
 %clean
@@ -87,6 +87,6 @@ fi
 %doc NEWS TODO debian/changelog CHANGES-0.81 README.user
 %attr(755,root,root) %{_sbindir}/rbldnsd
 %attr(754,root,root) /etc/rc.d/init.d/rbldnsd
-%config(noreplace) %verify(not md5 size mtime) /etc/rbldnsd
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/rbldnsd
 %{_mandir}/man8/rbldnsd.8*
 %dir %{_homedir}
