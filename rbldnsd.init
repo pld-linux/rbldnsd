@@ -1,26 +1,35 @@
 #! /bin/sh
-# $Id$
 # rbldnsd	startup script.
 #
 # chkconfig:	345 80 30
-# description:	rbldnsd is a DNS daemon for DNSBLs.  Configure it in \
-#		/etc/default/rbldnsd or /etc/sysconfig/rbldnsd
+# description:	rbldnsd is a DNS daemon for DNSBLs. \
+#				Configure it in /etc/sysconfig/rbldnsd
 
-PATH=/sbin:/bin:/usr/sbin:/usr/bin
+# Source function library
+. /etc/rc.d/init.d/functions
+
+# Get network config
+. /etc/sysconfig/network
+
+# Check that networking is up
+if is_yes "${NETWORKING}"; then
+	if [ ! -f /var/lock/subsys/network -a "$1" != stop -a "$1" != status -a "$1" != init ]; then
+		msg_network_down MySQL
+		exit 1
+	fi
+else
+	exit 0
+fi
+
 NAME=rbldnsd
-DESC=$NAME
-DAEMON=/usr/sbin/$NAME
-
-test -f $DAEMON || exit 0
+DESC=rbldnsd
 
 set -e
 
 RBLDNSD=
 
-if [ -f /etc/default/$NAME ] ; then
-  . /etc/default/$NAME
-elif [ -f /etc/sysconfig/$NAME ]; then
-  . /etc/sysconfig/$NAME
+if [ -f /etc/sysconfig/rbldnsd ]; then
+  . /etc/sysconfig/rbldnsd
 else
   exit 0
 fi
@@ -53,7 +62,7 @@ report() {
 }
 
 runit() {
-  $DAEMON -p $pidfile $args
+  /usr/sbin/rbldnsd -p $pidfile $args
 }
 
 start() {
@@ -89,23 +98,25 @@ reload() {
   fi
 }
 
+RETVAL=0
+# See how we were called.
 case "$1" in
-  start|restart)
+start|restart)
 	forall $1
-	if [ -d /var/lock/subsys ] ; then touch /var/lock/subsys/$NAME; fi
+	touch /var/lock/subsys/rbldnsd
 	;;
-  stop)
+stop)
 	forall $1
-	rm -f /var/lock/subsys/$NAME
+	rm -f /var/lock/subsys/rbldnsd
 	;;
-  reload|force-reload)
+reload|force-reload)
 	forall reload
 	;;
-  *)
-	N=/etc/init.d/$NAME
-	echo "Usage: $N {start|stop|restart|reload|force-reload}" >&2
-	exit 1
+*)
+	msg_usage "$0 {start|stop|restart|reload|force-reload|status}"
+	exit 3
 	;;
 esac
 
-exit 0
+exit $RETVAL
+# vim:ts=4:sw=4
