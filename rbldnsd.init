@@ -14,7 +14,7 @@
 # Check that networking is up
 if is_yes "${NETWORKING}"; then
 	if [ ! -f /var/lock/subsys/network -a "$1" != stop -a "$1" != status -a "$1" != init ]; then
-		msg_network_down MySQL
+		msg_network_down rbldnsd
 		exit 1
 	fi
 else
@@ -22,7 +22,6 @@ else
 fi
 
 NAME=rbldnsd
-DESC=rbldnsd
 RBLDNSD=
 
 if [ -f /etc/sysconfig/rbldnsd ]; then
@@ -36,10 +35,11 @@ test -n "$RBLDNSD" || exit 0
 forall() {
 	RETVAL=0
 
+	# FIXME: get rid of subshell to have exit codes proper for $RETVAL
 	echo "$RBLDNSD" |
 	while read name args; do
 		case "$name" in
-		""|\#*)
+		''|'#'*)
 			continue
 			;;
 		-)
@@ -75,12 +75,12 @@ runit() {
 
 start() {
 	if [ ! "$pid" ]; then
-		msg_starting $name
+		msg_starting "rbldnsd $name"
 		runit
 		RETVAL=$?
 		[ "$RETVAL" = 0 ] && ok || fail
 	else
-		msg_already_running $name
+		msg_already_running "rbldnsd $name"
 	fi
 
 	return $RETVAL
@@ -88,13 +88,13 @@ start() {
 
 stop() {
 	if [ "$pid" ]; then
-		msg_stopping $name
+		msg_stopping "rbldnsd $name"
 		kill $pid
 		rm -f $pidfile
 		RETVAL=$?
 		[ "$RETVAL" = 0 ] && ok || fail
 	else
-		msg_not_running $name
+		msg_not_running "rbldnsd $name"
 	fi
 
 	return $RETVAL
@@ -102,11 +102,11 @@ stop() {
 
 restart() {
 	if [ "$pid" ]; then
-		msg_stopping $name
+		msg_stopping "rbldnsd $name"
 		kill $pid
 		[ "$RETVAL" = 0 ] && ok || fail
 		RETVAL=$?
-		msg_starting $name
+		msg_starting "rbldnsd $name"
 		runit
 		[ "$RETVAL" != 0 ] && RETVAL=$?
 		[ "$RETVAL" = 0 ] && ok || fail
@@ -119,7 +119,7 @@ restart() {
 
 reload() {
 	if [ "$pid" ]; then
-		msg_reloading $name
+		msg_reloading "rbldnsd $name"
 		kill -HUP $pid
 		RETVAL=$?
 		[ "$RETVAL" = 0 ] && ok || fail
