@@ -1,21 +1,22 @@
-# TODO:
-# - uid and group for rbldns user
-# - proper init script, .default probably should be sysconfig
 Summary:	Small fast daemon to serve DNSBLs
 Summary(pl):	Ma³y, szybki demon obs³uguj±cy zapytania DNSBL
 Name:		rbldnsd
 Version:	0.995
-Release:	0.2
+Release:	1
 License:	GPL v2+
 Group:		Networking/Daemons
 Source0:	http://www.corpit.ru/mjt/rbldnsd/%{name}_%{version}.tar.gz
 # Source0-md5:	888a61e9a296a1b76db0c94ca44c612a
+Source1:	rbldnsd.init
 URL:		http://www.corpit.ru/mjt/rbldnsd.html
 BuildRequires:	rpmbuild(macros) >= 1.268
 Requires(post,preun):	/sbin/chkconfig
 Requires(postun):	/usr/sbin/userdel
 Requires(pre):	/bin/id
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
+Provides:	group(rbldns)
 Provides:	user(rbldns)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -44,19 +45,20 @@ CC="%{__cc}" \
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8,/etc/rc.d/init.d}
+install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8,/etc/{sysconfig,rc.d/init.d}}
 install -d $RPM_BUILD_ROOT%{_homedir}
 
 install rbldnsd $RPM_BUILD_ROOT%{_sbindir}
 install rbldnsd.8 $RPM_BUILD_ROOT%{_mandir}/man8
-install debian/rbldnsd.default $RPM_BUILD_ROOT%{_sysconfdir}/rbldnsd
-install debian/rbldnsd.init $RPM_BUILD_ROOT/etc/rc.d/init.d/rbldnsd
+install debian/rbldnsd.default $RPM_BUILD_ROOT/etc/sysconfig/rbldnsd
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/rbldnsd
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %pre
-%useradd  -r -d %{_homedir} -M -c "rbldnsd pseudo-user" -s /bin/false rbldns
+%groupadd -g 83 rbldns
+%useradd -u 37 -r -d %{_homedir} -M -g rbldns -s /bin/false -c "rbldnsd pseudo-user" rbldns 
 
 %post
 /sbin/chkconfig --add rbldnsd
@@ -71,6 +73,7 @@ fi
 %postun
 if [ "$1" = "0" ]; then
 	%userremove rbldns
+	%groupremove rbldns
 fi
 
 %files
@@ -78,6 +81,6 @@ fi
 %doc NEWS TODO debian/changelog CHANGES-0.81 README.user
 %attr(755,root,root) %{_sbindir}/rbldnsd
 %attr(754,root,root) /etc/rc.d/init.d/rbldnsd
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/rbldnsd
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/rbldnsd
 %{_mandir}/man8/rbldnsd.8*
 %dir %{_homedir}
