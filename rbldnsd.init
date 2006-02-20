@@ -34,6 +34,8 @@ fi
 test -n "$RBLDNSD" || exit 0
 
 forall() {
+	RETVAL=0
+
 	echo "$RBLDNSD" |
 	while read name args; do
 		case "$name" in
@@ -60,11 +62,11 @@ forall() {
 		fi
 		# call subroutine
 		$1
+		RETVAL=$?
+		[ $? != 0 ] && RETVAL=$?
 	done
-}
 
-report() {
-	echo "$1 $DESC: $name"
+	return $RETVAL
 }
 
 runit() {
@@ -80,6 +82,8 @@ start() {
 	else
 		msg_already_running $name
 	fi
+
+	return $RETVAL
 }
 
 stop() {
@@ -92,6 +96,8 @@ stop() {
 	else
 		msg_not_running $name
 	fi
+
+	return $RETVAL
 }
 
 restart() {
@@ -107,6 +113,8 @@ restart() {
 	else
 		start
 	fi
+
+	return $RETVAL
 }
 
 reload() {
@@ -116,6 +124,8 @@ reload() {
 		RETVAL=$?
 		[ "$RETVAL" = 0 ] && ok || fail
 	fi
+
+	return $RETVAL
 }
 
 RETVAL=0
@@ -123,14 +133,17 @@ RETVAL=0
 case "$1" in
 start|restart)
 	forall $1
-	touch /var/lock/subsys/rbldnsd
+	RETVAL=$?
+	[ "$RETVAL" = 0 ] && touch /var/lock/subsys/rbldnsd
 	;;
 stop)
 	forall $1
-	rm -f /var/lock/subsys/rbldnsd
+	RETVAL=$?
+	[ "$RETVAL" = 0 ] && rm -f /var/lock/subsys/rbldnsd
 	;;
 reload|force-reload)
 	forall reload
+	RETVAL=$?
 	;;
 status)
 	status rbldnsd
