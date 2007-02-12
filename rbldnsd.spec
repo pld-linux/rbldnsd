@@ -1,5 +1,5 @@
 Summary:	Small fast daemon to serve DNSBLs
-Summary(pl.UTF-8):   Mały, szybki demon obsługujący zapytania DNSBL
+Summary(pl.UTF-8):	Mały, szybki demon obsługujący zapytania DNSBL
 Name:		rbldnsd
 Version:	0.995
 Release:	3
