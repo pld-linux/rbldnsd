@@ -1,5 +1,5 @@
 Summary:	Small fast daemon to serve DNSBLs
-Summary(pl):	Ma³y, szybki demon obs³uguj±cy zapytania DNSBL
+Summary(pl.UTF-8):   MaÅ‚y, szybki demon obsÅ‚ugujÄ…cy zapytania DNSBL
 Name:		rbldnsd
 Version:	0.995
 Release:	3
@@ -27,10 +27,10 @@ rbldnsd is a small authoritate-only DNS nameserver designed to serve
 DNS-based blocklists (DNSBLs). It may handle IP-based and name-based
 blocklists.
 
-%description -l pl
-rbldnsd to ma³y, wy³±cznie autorytatywny serwer nazw (DNS)
-zaprojektowany do udostêpniania list blokuj±cych opartych na DNS-ie
-(DNSBL). Mo¿e obs³ugiwaæ listy blokuj±ce oparte na IP lub nazwach.
+%description -l pl.UTF-8
+rbldnsd to maÅ‚y, wyÅ‚Ä…cznie autorytatywny serwer nazw (DNS)
+zaprojektowany do udostÄ™pniania list blokujÄ…cych opartych na DNS-ie
+(DNSBL). MoÅ¼e obsÅ‚ugiwaÄ‡ listy blokujÄ…ce oparte na IP lub nazwach.
 
 %prep
 %setup -q
