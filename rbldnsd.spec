@@ -2,7 +2,7 @@ Summary:	Small fast daemon to serve DNSBLs
 Summary(pl.UTF-8):	Mały, szybki demon obsługujący zapytania DNSBL
 Name:		rbldnsd
 Version:	0.996b
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Networking/Daemons
 Source0:	http://www.corpit.ru/mjt/rbldnsd/%{name}_%{version}.tar.gz
