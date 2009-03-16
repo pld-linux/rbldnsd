@@ -21,6 +21,7 @@ Provides:	user(rbldns)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define 	_homedir	/var/lib/rbldns
+%define 	_logdir		/var/log/rbldns
 
 %description
 rbldnsd is a small authoritate-only DNS nameserver designed to serve
@@ -46,7 +47,7 @@ CC="%{__cc}" \
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8,/etc/{sysconfig,rc.d/init.d}}
-install -d $RPM_BUILD_ROOT%{_homedir}
+install -d $RPM_BUILD_ROOT{%{_homedir},%{_logdir}}
 
 install rbldnsd $RPM_BUILD_ROOT%{_sbindir}
 install rbldnsd.8 $RPM_BUILD_ROOT%{_mandir}/man8
@@ -84,3 +85,4 @@ fi
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/rbldnsd
 %{_mandir}/man8/rbldnsd.8*
 %dir %{_homedir}
+%dir %attr(775,root,rbldns) %{_logdir}
