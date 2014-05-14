@@ -1,0 +1,12 @@
+diff -ur rbldnsd-0.997a.orig/rbldnsd.c rbldnsd-0.997a/rbldnsd.c
+--- rbldnsd-0.997a.orig/rbldnsd.c	2013-04-06 16:28:53.000000000 +0000
++++ rbldnsd-0.997a/rbldnsd.c	2014-05-14 13:33:03.043934866 +0000
+@@ -959,7 +959,7 @@
+ # undef kb
+   }
+ #endif /* NO_MEMINFO */
+-  dslog(LOG_INFO, 0, ibuf);
++  dslog(LOG_INFO, 0, "%s", ibuf);
+ 
+   check_expires();
+ 
