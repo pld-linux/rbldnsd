@@ -1,13 +1,14 @@
 Summary:	Small fast daemon to serve DNSBLs
 Summary(pl.UTF-8):	Mały, szybki demon obsługujący zapytania DNSBL
 Name:		rbldnsd
-Version:	0.996b
-Release:	2
+Version:	0.997a
+Release:	1
 License:	GPL v2+
 Group:		Networking/Daemons
-Source0:	http://www.corpit.ru/mjt/rbldnsd/%{name}_%{version}.tar.gz
-# Source0-md5:	9a0f26f3b33764c325a96bd4c61b26fa
+Source0:	http://www.corpit.ru/mjt/rbldnsd/%{name}-%{version}.tar.gz
+# Source0-md5:	6d53caa511e003ff31391c6e6a63d2b0
 Source1:	%{name}.init
+Patch0:		%{name}-werror.patch
 URL:		http://www.corpit.ru/mjt/rbldnsd.html
 BuildRequires:	rpmbuild(macros) >= 1.268
 Requires(post,preun):	/sbin/chkconfig
@@ -35,6 +36,7 @@ zaprojektowany do udostępniania list blokujących opartych na DNS-ie
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 # not autoconf configure
